@@ -1,1 +1,759 @@
-print("dw, it works")
+-- Get the Services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+-- Get the LocalPlayer
+local LocalPlayer = Players.LocalPlayer
+
+-- Get the PlayerGui for the LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create a new ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MyCustomGui"
+screenGui.ResetOnSpawn = false -- GUI will persist if player respawns
+screenGui.Parent = PlayerGui
+
+-- Create a draggable container Frame
+local draggableContainer = Instance.new("Frame")
+draggableContainer.Name = "DraggableContainer"
+draggableContainer.Size = UDim2.new(0, 300, 0, 190) -- Width of elements, Height = 30 (for textLabel area) + 160 (for frame)
+draggableContainer.Position = UDim2.new(0, 100, 0, 100) -- Initial position on screen (e.g., 100px from top-left)
+draggableContainer.BackgroundTransparency = 1 -- Invisible container
+draggableContainer.BorderSizePixel = 0
+draggableContainer.Parent = screenGui
+
+-- Example: Create a TextLabel inside the DraggableContainer (acts as title/drag handle)
+local textLabel = Instance.new("TextLabel")
+textLabel.Name = "InfoLabel"
+textLabel.Text = "Global Exploitz - Refer to F9 for info"
+textLabel.Size = UDim2.new(0, 300, 0, 25)
+textLabel.Position = UDim2.new(0, 0, 0, 0) -- Positioned at top-left of container
+textLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.Font = Enum.Font.SourceSans
+textLabel.TextSize = 18
+textLabel.BorderSizePixel = 5
+textLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+textLabel.Parent = draggableContainer
+
+-- Frame for content backdrop
+local frame = Instance.new("Frame")
+frame.Name = "Backdrop"
+frame.Size = UDim2.new(0, 300, 0, 400)
+frame.Position = UDim2.new(0, 0, 0, 30) -- Positioned below textLabel, within container
+frame.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
+frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderSizePixel = 5
+frame.Parent = draggableContainer
+
+-- TextButton
+local loadPlatforms = Instance.new("TextButton")
+loadPlatforms.Name = "LoadPlatformsButton" -- Changed name for clarity
+loadPlatforms.Text = "Load Platforms"
+loadPlatforms.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
+loadPlatforms.Position = UDim2.new(0, 10, 0, 10) -- Positioned within the frame area, relative to frame's top (so 30+10 = 40 from container top)
+loadPlatforms.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadPlatforms.BorderColor3 = Color3.fromRGB(0, 0, 0)
+loadPlatforms.BorderSizePixel = 5
+loadPlatforms.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadPlatforms.Font = Enum.Font.SourceSans
+loadPlatforms.TextSize = 16
+loadPlatforms.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 10) -- Centered Horizontally, 10px from top of frame area
+loadPlatforms.Parent = draggableContainer
+
+local loadFreecam = Instance.new("TextButton")
+loadFreecam.Name = "LoadFreecamButton" -- Changed name for clarity
+loadFreecam.Text = "Load Freecam"
+loadFreecam.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
+loadFreecam.Position = UDim2.new(0, 10, 0, 10)
+loadFreecam.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadFreecam.BorderColor3 = Color3.fromRGB(0, 0, 0)
+loadFreecam.BorderSizePixel = 5
+loadFreecam.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadFreecam.Font = Enum.Font.SourceSans
+loadFreecam.TextSize = 16
+loadFreecam.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 60) -- Centered Horizontally, 10px from top of frame area
+loadFreecam.Parent = draggableContainer
+
+local loadTeleport = Instance.new("TextButton")
+loadTeleport.Name = "LoadTeleportButton" -- Changed name for clarity
+loadTeleport.Text = "Load Teleport"
+loadTeleport.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
+loadTeleport.Position = UDim2.new(0, 10, 0, 10)
+loadTeleport.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadTeleport.BorderColor3 = Color3.fromRGB(0, 0, 0)
+loadTeleport.BorderSizePixel = 5
+loadTeleport.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadTeleport.Font = Enum.Font.SourceSans
+loadTeleport.TextSize = 16
+loadTeleport.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 110) -- Centered Horizontally, 10px from top of frame area
+loadTeleport.Parent = draggableContainer
+
+local loadESP = Instance.new("TextButton")
+loadESP.Name = "LoadESPButton" -- Changed name for clarity
+loadESP.Text = "Load ESP"
+loadESP.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
+loadESP.Position = UDim2.new(0, 10, 0, 10)
+loadESP.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadESP.BorderColor3 = Color3.fromRGB(0, 0, 0)
+loadESP.BorderSizePixel = 5
+loadESP.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadESP.Font = Enum.Font.SourceSans
+loadESP.TextSize = 16
+loadESP.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 160) -- Centered Horizontally, 10px from top of frame area
+loadESP.Parent = draggableContainer
+
+local loadWaypoints = Instance.new("TextButton")
+loadWaypoints.Name = "LoadWaypointsButton" -- Changed name for clarity
+loadWaypoints.Text = "Load Waypoints"
+loadWaypoints.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
+loadWaypoints.Position = UDim2.new(0, 10, 0, 10)
+loadWaypoints.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadWaypoints.BorderColor3 = Color3.fromRGB(0, 0, 0)
+loadWaypoints.BorderSizePixel = 5
+loadWaypoints.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadWaypoints.Font = Enum.Font.SourceSans
+loadWaypoints.TextSize = 16
+loadWaypoints.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 210) -- Centered Horizontally, 10px from top of frame area
+loadWaypoints.Parent = draggableContainer
+
+-- Configure TextLabel (drag handle) for input
+textLabel.Active = true
+textLabel.Selectable = false
+
+-- Variables for dragging logic
+local dragging = false
+local dragStartMouseOffset = Vector2.new(0, 0)
+
+-- Event when input begins on the TextLabel (drag handle)
+textLabel.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        -- Calculate offset from mouse to the draggableContainer's top-left corner
+        dragStartMouseOffset = Vector2.new(input.Position.X - draggableContainer.AbsolutePosition.X, input.Position.Y - draggableContainer.AbsolutePosition.Y)
+    end
+end)
+
+-- Event for global input changes (like mouse movement)
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        -- Calculate new top-left position for the draggableContainer
+        local newContainerPosX = input.Position.X - dragStartMouseOffset.X
+        local newContainerPosY = input.Position.Y - dragStartMouseOffset.Y
+        
+        -- Update the draggableContainer's position
+        draggableContainer.Position = UDim2.new(0, newContainerPosX, 0, newContainerPosY)
+    end
+end)
+
+-- Event when input ends (e.g., mouse button release)
+UserInputService.InputEnded:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+        if dragging then
+            dragging = false -- Stop dragging
+        end
+    end
+end)
+
+loadPlatforms.Activated:Connect(function()
+	loadPlatforms.Text = ("...")
+	local UserInputService = game:GetService("UserInputService")
+	local Players = game:GetService("Players")
+
+	local LocalPlayer = Players.LocalPlayer
+
+	-- This function creates a part, positions it below the player, waits, and then destroys it.
+	local function createAndDestroyTemporaryPart()
+		local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+		local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+
+		if humanoidRootPart then
+			local part = Instance.new("Part")
+			part.Name = "TempPart_E_Key_" .. math.random(1, 100000) -- Give it a descriptive name
+			part.Anchored = true
+			part.Size = Vector3.new(10, 1, 10)
+			part.Color = Color3.new(1, 1, 1) -- White color
+			part.Parent = workspace
+			part.Transparency = 0.95
+
+			-- Position the part's center 2 units below the HumanoidRootPart's center
+			part.Position = humanoidRootPart.Position - Vector3.new(0, 4, 0)
+
+			task.wait(2) -- Wait for half a second
+
+			-- Check if the part still exists and is parented before destroying
+			if part and part.Parent then
+				part:Destroy()
+			end
+		else
+			warn("HumanoidRootPart not found for player: " .. LocalPlayer.Name .. " when attempting to create part via E key.")
+		end
+	end
+
+	-- Listen for keyboard input
+	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+		-- gameProcessedEvent is true if the input was already consumed by the game (e.g., typing in chat)
+		if gameProcessedEvent then
+			return
+		end
+
+		if input.KeyCode == Enum.KeyCode.Space then
+			createAndDestroyTemporaryPart()
+		end
+	end)
+	print("Platforms Activated! Just jump...")
+	loadPlatforms.Transparency = 1
+end)
+
+
+
+
+loadFreecam.Activated:Connect(function()
+	loadFreecam.Text = ("...")
+	-- Services
+	local UserInputService = game:GetService("UserInputService")
+	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+
+	-- Local Player & Camera
+	local LocalPlayer = Players.LocalPlayer
+	local Camera = workspace.CurrentCamera
+
+	-- Configuration
+	local MOVE_SPEED = 50
+	local SPRINT_SPEED_MULTIPLIER = 2
+	local MOUSE_SENSITIVITY = 0.003 -- Radians per pixel
+	local MAX_PITCH = math.rad(89) -- Max pitch angle in radians
+	local MIN_PITCH = math.rad(-89) -- Min pitch angle in radians
+	local FREEZE_KEY = Enum.KeyCode.R -- Key to toggle freecam
+
+	-- State
+	local isFreecamActive = false
+	local originalCameraType
+	local originalCameraCFrame
+	local freecamPosition = Vector3.new(0, 0, 0)
+	local yaw = 0
+	local pitch = 0
+	local originalCharacterAnchorState = {} -- To store original anchor state of character parts
+
+	local renderSteppedConnection = nil
+
+	-- Functions
+	local function anchorCharacter(character, anchor)
+		if character then
+			local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+			if humanoidRootPart then
+				humanoidRootPart.Anchored = anchor
+			end
+		end
+	end
+
+	local function activateFreecam()
+		if isFreecamActive then return end
+		isFreecamActive = true
+
+		local character = LocalPlayer.Character
+		if character then
+			anchorCharacter(character, true)
+		end
+
+		originalCameraType = Camera.CameraType
+		originalCameraCFrame = Camera.CFrame
+
+		Camera.CameraType = Enum.CameraType.Scriptable
+		UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+
+		freecamPosition = originalCameraCFrame.Position
+		local lookVector = originalCameraCFrame.LookVector
+		yaw = math.atan2(lookVector.X, -lookVector.Z) -- Note: Roblox Z is negative forward
+		pitch = math.asin(lookVector.Y)
+
+		renderSteppedConnection = RunService.RenderStepped:Connect(function(deltaTime)
+			if not isFreecamActive then return end
+
+			-- Mouse Rotation
+			local mouseDelta = UserInputService:GetMouseDelta()
+			yaw = yaw - mouseDelta.X * MOUSE_SENSITIVITY
+			pitch = math.clamp(pitch - mouseDelta.Y * MOUSE_SENSITIVITY, MIN_PITCH, MAX_PITCH)
+
+			-- Keyboard Movement
+			local moveVector = Vector3.new()
+			if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+				moveVector = moveVector + Vector3.new(0, 0, -1)
+			end
+			if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+				moveVector = moveVector + Vector3.new(0, 0, 1)
+			end
+			if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+				moveVector = moveVector + Vector3.new(-1, 0, 0)
+			end
+			if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+				moveVector = moveVector + Vector3.new(1, 0, 0)
+			end
+			if UserInputService:IsKeyDown(Enum.KeyCode.E) then -- Up
+				moveVector = moveVector + Vector3.new(0, 1, 0)
+			end
+			if UserInputService:IsKeyDown(Enum.KeyCode.Q) then -- Down
+				moveVector = moveVector + Vector3.new(0, -1, 0)
+			end
+
+			local currentSpeed = MOVE_SPEED
+			if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
+				currentSpeed = currentSpeed * SPRINT_SPEED_MULTIPLIER
+			end
+
+			-- Apply rotation to movement vector
+			local rotationCFrame = CFrame.Angles(0, yaw, 0)
+			local worldMoveVector = rotationCFrame:VectorToWorldSpace(moveVector.Unit)
+
+			if moveVector.Magnitude > 0 then -- Only move if there's input
+				freecamPosition = freecamPosition + worldMoveVector * currentSpeed * deltaTime
+			end
+
+			-- Update camera CFrame
+			Camera.CFrame = CFrame.new(freecamPosition) * CFrame.Angles(0, yaw, 0) * CFrame.Angles(pitch, 0, 0)
+		end)
+
+		print("Freecam Activated")
+	end
+
+	local function deactivateFreecam()
+		if not isFreecamActive then return end
+		isFreecamActive = false
+
+		local character = LocalPlayer.Character
+		if character then
+			anchorCharacter(character, false)
+		end
+
+		if renderSteppedConnection then
+			renderSteppedConnection:Disconnect()
+			renderSteppedConnection = nil
+		end
+
+		Camera.CameraType = originalCameraType
+		if originalCameraCFrame then -- Ensure CFrame was stored
+			Camera.CFrame = originalCameraCFrame
+		end
+		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+
+		print("Freecam Deactivated")
+	end
+
+	local function onInputBegan(input, gameProcessedEvent)
+		if gameProcessedEvent then
+			return
+		end
+
+		if input.KeyCode == FREEZE_KEY then
+			if isFreecamActive then
+				deactivateFreecam()
+			else
+				activateFreecam()
+			end
+		end
+	end
+
+	-- Connect input
+	UserInputService.InputBegan:Connect(onInputBegan)
+
+	-- Handle character respawn
+	if LocalPlayer then
+		LocalPlayer.CharacterAdded:Connect(function(character)
+			-- If freecam is active when player respawns, re-anchor the new character
+			-- Or, decide to deactivate freecam. For now, let's deactivate.
+			if isFreecamActive then
+				-- deactivateFreecam() -- Option 1: Deactivate freecam on respawn
+				-- Option 2: Re-anchor new character if freecam is meant to persist through respawn
+				-- For simplicity, deactivating is safer. If you want to persist,
+				-- you'd call anchorCharacter(character, true) here.
+				-- However, camera might be in an odd state.
+				-- Best to deactivate and let user re-enable.
+				print("Player respawned, deactivating freecam.")
+				deactivateFreecam()
+			end
+
+			-- Ensure character is unanchored if script reloads/player joins and freecam is somehow not active
+			-- This is a safety, usually not needed if logic is clean
+			if not isFreecamActive then
+				anchorCharacter(character, false)
+			end
+		end)
+	end
+	print("Freecam Activated! Use W/A/S/D to move, E/Q for up and down, shift to go fast. May not anchor you, may break. Only works with 1st/3rd person")
+	loadFreecam.Transparency = 1
+end)
+
+
+
+
+
+
+loadTeleport.Activated:Connect(function()
+	loadTeleport.Text = ("...")
+	local UserInputService = game:GetService("UserInputService")
+	local Players = game:GetService("Players")
+
+	local LocalPlayer = Players.LocalPlayer
+	if not LocalPlayer then
+		Players.PlayerAdded:Wait() -- Should not happen in LocalScript under StarterPlayerScripts but good practice
+		LocalPlayer = Players.LocalPlayer
+	end
+
+	local mouse = LocalPlayer:GetMouse()
+
+	local isRightMouseDown = false
+
+	local summonedParts = 0
+
+	local function spawnPartAtMouse()
+		local target = mouse.Target
+		local hitPosition = mouse.Hit.Position
+
+		if target and target.CanCollide then
+			local newPart = Instance.new("Part")
+			newPart.Name = "ClickedPart"
+			newPart.Size = Vector3.new(1, 1, 1) -- Default size, can be changed
+			newPart.Color = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255)) -- Random color
+			newPart.Anchored = true
+			newPart.CanCollide = false
+			newPart.Position = hitPosition
+			newPart.Parent = workspace
+			summonedParts = summonedParts + 1
+
+			-- Move player to the new part
+			local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+			if character then
+				local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+				if humanoidRootPart then
+					-- Calculate position on top of the part
+					-- Assuming part size is 1,1,1, an offset of 3 should be enough for player height
+					local targetPosition = newPart.Position + Vector3.new(0, 3, 0) 
+					character:PivotTo(CFrame.new(targetPosition))
+				end
+			end
+
+			task.wait(0.001)
+			summonedParts = summonedParts - 1
+			if newPart and newPart.Parent then -- Check if part still exists before destroying
+				newPart:Destroy()
+			end
+		else
+			print("Cannot spawn part: Target is not collidable or does not exist.")
+		end
+	end
+
+	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+		if gameProcessedEvent then
+			return -- Ignore input if it's already processed by the game (e.g., typing in chat)
+		end
+
+		if input.UserInputType == Enum.UserInputType.MouseButton2 then -- Right mouse button
+			isRightMouseDown = true
+		elseif input.UserInputType == Enum.UserInputType.MouseButton3 then -- Left mouse button
+			if isRightMouseDown and summonedParts < 1 then
+				spawnPartAtMouse()
+			else
+				if not isRightMouseDown then
+					print("Failed to spawn part: Right mouse button not held.")
+				elseif summonedParts >= 1 then
+					print("Failed to spawn part: Part limit reached.")
+				else
+					print("Failed to spawn part.")
+				end
+			end
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+		if input.UserInputType == Enum.UserInputType.MouseButton2 then -- Right mouse button
+			isRightMouseDown = false
+		end
+	end)
+	print("(Mb2) or (RightClick) - hold and press (Mb3) or (MiddleClick) to teleport")
+	loadTeleport.Transparency = 1
+end)
+
+loadESP.Activated:Connect(function()
+	loadESP.Text = ("...")
+	-- Put this LocalScript inside StarterPlayer > StarterPlayerScripts
+
+	local Players = game:GetService("Players")
+	local RunService = game:GetService("RunService")
+	local LocalPlayer = Players.LocalPlayer
+	local Camera = workspace.CurrentCamera
+
+	local highlights = {}
+	local distanceLabels = {}
+
+	-- Utility: create Billboard GUI for distance text
+	local function createDistanceLabel()
+		local billboard = Instance.new("BillboardGui")
+		billboard.Name = "DistanceDisplay"
+		billboard.Size = UDim2.new(0, 100, 0, 40)
+		billboard.StudsOffset = Vector3.new(0, 3.5, 0)
+		billboard.AlwaysOnTop = true
+
+		local textLabel = Instance.new("TextLabel")
+		textLabel.Size = UDim2.new(1, 0, 1, 0)
+		textLabel.BackgroundTransparency = 1
+		textLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
+		textLabel.TextStrokeTransparency = 0.3
+		textLabel.TextScaled = true
+		textLabel.Font = Enum.Font.SourceSansBold
+		textLabel.Text = "Loading..."
+		textLabel.Parent = billboard
+
+		return billboard
+	end
+
+	-- Apply or update highlight and distance text
+	local function applyVisualsToCharacter(character, player)
+		if player == LocalPlayer then return end
+
+		-- Highlight
+		if highlights[player] and highlights[player].Adornee ~= character then
+			highlights[player]:Destroy()
+			highlights[player] = nil
+		end
+
+		if not highlights[player] then
+			local highlight = Instance.new("Highlight")
+			highlight.Name = "PlayerHighlighter"
+			highlight.FillColor = Color3.fromRGB(255, 255, 0)
+			highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+			highlight.OutlineTransparency = 0
+			highlight.FillTransparency = 0.5
+			highlight.Adornee = character
+			highlight.Parent = character
+			highlights[player] = highlight
+		end
+
+		-- Distance Label
+		local head = character:FindFirstChild("Head")
+		if head then
+			if not distanceLabels[player] or not distanceLabels[player].Parent then
+				local labelGui = createDistanceLabel()
+				labelGui.Parent = head
+				distanceLabels[player] = labelGui
+			end
+		end
+	end
+
+	-- Update distance text
+	local function updateDistanceText()
+		for _, player in pairs(Players:GetPlayers()) do
+			if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+				local head = player.Character:FindFirstChild("Head")
+				local root = player.Character:FindFirstChild("HumanoidRootPart")
+				local myRoot = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+				if root and myRoot and distanceLabels[player] then
+					local distance = (myRoot.Position - root.Position).Magnitude
+					local textLabel = distanceLabels[player]:FindFirstChildOfClass("TextLabel")
+					if textLabel then
+						textLabel.Text = string.format("%.1f studs", distance)
+					end
+				end
+			end
+		end
+	end
+
+	-- Cleanup when player leaves
+	Players.PlayerRemoving:Connect(function(player)
+		if highlights[player] then
+			highlights[player]:Destroy()
+			highlights[player] = nil
+		end
+		if distanceLabels[player] then
+			distanceLabels[player]:Destroy()
+			distanceLabels[player] = nil
+		end
+	end)
+
+	-- Run every frame
+	RunService.RenderStepped:Connect(function()
+		for _, player in pairs(Players:GetPlayers()) do
+			if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+				applyVisualsToCharacter(player.Character, player)
+			end
+		end
+		updateDistanceText()
+	end)
+	print("When loaded, attempts to put highlight on all players. If it didn't work, damn they have a good anticheat.")
+	loadESP.Transparency = 1
+end)
+
+loadWaypoints.Activated:Connect(function()
+	loadWaypoints.Text = ("...")
+	--// Services
+	local Players = game:GetService("Players")
+	local UserInputService = game:GetService("UserInputService")
+
+	local player = Players.LocalPlayer
+	local waypoints = {} -- Will store tables {position = Vector3, part = Instance}
+
+	--// Key state tracking
+	local keysDown = {
+		Semicolon = false,
+		Quote = false,       -- The `"` key (same as apostrophe on most keyboards)
+		Backspace = false
+	}
+
+	local function refreshWaypointLabels()
+		for i, wp in ipairs(waypoints) do
+			if wp.part then
+				local label = wp.part:FindFirstChild("WaypointLabel")
+				if label and label:IsA("BillboardGui") then
+					local textLabel = label:FindFirstChildOfClass("TextLabel")
+					if textLabel then
+						textLabel.Text = tostring(i)
+					end
+				end
+			end
+		end
+	end
+	--// Helper: create a visual marker & store part+position
+	local function createWaypoint()
+		local char = player.Character or player.CharacterAdded:Wait()
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+
+		local pos = hrp.Position
+
+		if #waypoints >= 9 then
+			warn("Maximum 9 waypoints.")
+			return
+		end
+
+		local marker = Instance.new("Part")
+		marker.Size = Vector3.new(1, 1, 1)
+		marker.Anchored = true
+		marker.CanCollide = false
+		marker.Color = Color3.fromRGB(255, 255, 255)
+		marker.Position = pos
+		marker.Name = "WaypointMarker"
+		marker.Parent = workspace
+
+		local highlight = Instance.new("Highlight")
+		highlight.Name = "MarkerHighlighter"
+		highlight.FillColor = Color3.fromRGB(255, 255, 0)
+		highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+		highlight.OutlineTransparency = 0
+		highlight.FillTransparency = 0.25
+		highlight.Adornee = marker
+		highlight.Parent = marker
+
+		-- Add BillboardGui with label
+		local billboard = Instance.new("BillboardGui")
+		billboard.Name = "WaypointLabel"
+		billboard.Size = UDim2.new(0, 100, 0, 40)
+		billboard.StudsOffset = Vector3.new(0, 1.5, 0)
+		billboard.AlwaysOnTop = true
+		billboard.Adornee = marker
+		billboard.Parent = marker
+
+		local label = Instance.new("TextLabel")
+		label.Size = UDim2.new(1, 0, 1, 0)
+		label.BackgroundTransparency = 1
+		label.TextColor3 = Color3.new(1, 1, 1)
+		label.TextStrokeTransparency = 0
+		label.TextScaled = true
+		label.Font = Enum.Font.SourceSansBold
+		label.Text = tostring(#waypoints + 1)
+		label.Parent = billboard
+
+		-- Save the part and its position
+		table.insert(waypoints, {
+			position = pos,
+			part = marker
+		})
+
+		print("Waypoint #" .. #waypoints .. " created at " .. tostring(pos))
+		refreshWaypointLabels()
+	end
+
+
+	--// Helper: teleport to a waypoint
+	local function teleportToWaypoint(index)
+		local data = waypoints[index]
+		if data and data.position then
+			local char = player.Character or player.CharacterAdded:Wait()
+			char:PivotTo(CFrame.new(data.position))
+			print("Teleported to waypoint #" .. index)
+		else
+			warn("Waypoint #" .. index .. " not found.")
+		end
+	end
+
+	--// Helper: remove a waypoint
+	local function removeWaypoint(index)
+		local data = waypoints[index]
+		if data then
+			if data.part and data.part.Parent then
+				data.part:Destroy()
+			end
+			table.remove(waypoints, index)
+			print("Removed waypoint #" .. index)
+
+			-- Re-index the remaining waypoints visually
+			for i, wp in ipairs(waypoints) do
+				if wp.part then
+					local label = wp.part:FindFirstChild("WaypointLabel")
+					if label and label:IsA("BillboardGui") then
+						local textLabel = label:FindFirstChildOfClass("TextLabel")
+						if textLabel then
+							textLabel.Text = tostring(i)
+							refreshWaypointLabels()
+						end
+					end
+				end
+			end
+		else
+			warn("No waypoint at index " .. index)
+		end
+	end
+
+	--// Key mapping for number keys
+	local keyToIndex = {
+		One = 1, Two = 2, Three = 3,
+		Four = 4, Five = 5, Six = 6,
+		Seven = 7, Eight = 8, Nine = 9
+	}
+
+	--// Input handlers
+	UserInputService.InputBegan:Connect(function(input, gameProcessed)
+		local key = input.KeyCode.Name
+		if keysDown[key] ~= nil then
+			keysDown[key] = true
+		end
+
+		if keysDown.Semicolon and not gameProcessed then
+			-- Create waypoint with `"`
+			if keysDown.Quote then
+				createWaypoint()
+				return
+			end
+
+			-- Remove or teleport
+			if keyToIndex[key] then
+				local index = keyToIndex[key]
+				if keysDown.Backspace then
+					removeWaypoint(index)
+				else
+					teleportToWaypoint(index)
+				end
+			end
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input)
+		local key = input.KeyCode.Name
+		if keysDown[key] ~= nil then
+			keysDown[key] = false
+		end
+	end)
+	print("(;) as base key, (') for creation, (bkspc + 1-9) for deletion, (1-9) to teleport to waypoint")
+	loadWaypoints.Transparency = 1
+end)
