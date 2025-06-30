@@ -2,7 +2,8 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-
+infoOn = false
+loadPlatformsAct = false
 -- Get the LocalPlayer
 local LocalPlayer = Players.LocalPlayer
 
@@ -19,34 +20,88 @@ screenGui.Parent = PlayerGui
 local draggableContainer = Instance.new("Frame")
 draggableContainer.Name = "DraggableContainer"
 draggableContainer.Size = UDim2.new(0, 300, 0, 190) -- Width of elements, Height = 30 (for textLabel area) + 160 (for frame)
-draggableContainer.Position = UDim2.new(0, 100, 0, 100) -- Initial position on screen (e.g., 100px from top-left)
-draggableContainer.BackgroundTransparency = 1 -- Invisible container
+draggableContainer.Position = UDim2.new(0.4, 0, 0.3, 0) -- Initial position on screen (e.g., 100px from top-left)
+draggableContainer.BackgroundTransparency = 0 -- Invisible container
 draggableContainer.BorderSizePixel = 0
 draggableContainer.Parent = screenGui
 
 -- Example: Create a TextLabel inside the DraggableContainer (acts as title/drag handle)
 local textLabel = Instance.new("TextLabel")
 textLabel.Name = "InfoLabel"
-textLabel.Text = "Global Exploitz - Refer to F9 for info"
+textLabel.Text = "nuthub v0.1"
 textLabel.Size = UDim2.new(0, 300, 0, 25)
 textLabel.Position = UDim2.new(0, 0, 0, 0) -- Positioned at top-left of container
 textLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-textLabel.Font = Enum.Font.SourceSans
-textLabel.TextSize = 18
+textLabel.Font = Enum.Font.SourceSansBold
+textLabel.TextSize = 26
 textLabel.BorderSizePixel = 5
 textLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 textLabel.Parent = draggableContainer
+
+local exitButton = Instance.new("TextButton")
+exitButton.Name = "ExitButton"
+exitButton.Size = UDim2.new(0, 30, 0, 30) -- Size of 30x30
+exitButton.Position = UDim2.new(0, 270, 0, -5) -- Position at top-right
+exitButton.Text = "x"
+exitButton.TextScaled = true
+exitButton.Font = Enum.Font.SourceSansBold
+exitButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+exitButton.Parent = draggableContainer
+exitButton.BackgroundTransparency = 1
+exitButton.MouseButton1Click:Connect(function()
+	screenGui:Destroy() -- Remove the GUI when the exit button is clicked
+end)
+
+local minimizeButton = Instance.new("TextButton")
+minimizeButton.Name = "minimizeButton"
+minimizeButton.Size = UDim2.new(0, 30, 0, 30) -- Size of 30x30
+minimizeButton.Position = UDim2.new(0, 245, 0, -5) -- Position at top-right
+minimizeButton.Text = "-"
+minimizeButton.TextScaled = true
+minimizeButton.Font = Enum.Font.SourceSansBold
+minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizeButton.Parent = draggableContainer
+minimizeButton.BackgroundTransparency = 1
+minimizeButton.MouseButton1Click:Connect(function()
+	draggableContainer.Position = UDim2.new(0, 0, 0.97, 0)
+end)
+
+local infoButton = Instance.new("TextButton")
+infoButton.Name = "infoButton"
+infoButton.Size = UDim2.new(0, 30, 0, 30) -- Size of 30x30
+infoButton.Position = UDim2.new(0, 0, 0, 0) -- Position at top-right
+infoButton.Text = "i"
+infoButton.TextScaled = true
+infoButton.Font = Enum.Font.SourceSansBold
+infoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+infoButton.Parent = draggableContainer
+infoButton.BackgroundTransparency = 1
+infoButton.MouseButton1Click:Connect(function()
+	if infoOn == false then
+		infoOn = true
+	else
+		infoOn = false
+	end
+end)
 
 -- Frame for content backdrop
 local frame = Instance.new("Frame")
 frame.Name = "Backdrop"
 frame.Size = UDim2.new(0, 300, 0, 400)
 frame.Position = UDim2.new(0, 0, 0, 30) -- Positioned below textLabel, within container
-frame.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
+frame.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
 frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 frame.BorderSizePixel = 5
 frame.Parent = draggableContainer
+
+local bgGradient = Instance.new("UIGradient")
+bgGradient.Parent = frame
+bgGradient.Rotation = 90
+bgGradient.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+}
 
 -- TextButton
 local loadPlatforms = Instance.new("TextButton")
@@ -54,70 +109,115 @@ loadPlatforms.Name = "LoadPlatformsButton" -- Changed name for clarity
 loadPlatforms.Text = "Load Platforms"
 loadPlatforms.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
 loadPlatforms.Position = UDim2.new(0, 10, 0, 10) -- Positioned within the frame area, relative to frame's top (so 30+10 = 40 from container top)
-loadPlatforms.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadPlatforms.BackgroundColor3 = Color3.fromRGB(11, 12, 12)
 loadPlatforms.BorderColor3 = Color3.fromRGB(0, 0, 0)
 loadPlatforms.BorderSizePixel = 5
 loadPlatforms.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadPlatforms.Font = Enum.Font.SourceSans
-loadPlatforms.TextSize = 16
+loadPlatforms.Font = Enum.Font.SourceSansBold
+loadPlatforms.TextSize = 26
 loadPlatforms.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 10) -- Centered Horizontally, 10px from top of frame area
 loadPlatforms.Parent = draggableContainer
+
+local uiCorner1 = Instance.new("UICorner")
+uiCorner1.Parent = loadPlatforms
+
+local uiStroke1 = Instance.new("UIStroke")
+uiStroke1.Parent = loadPlatforms
+uiStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+uiStroke1.Thickness = 4
+uiStroke1.Color = Color3.fromRGB(0, 0, 0)
 
 local loadFreecam = Instance.new("TextButton")
 loadFreecam.Name = "LoadFreecamButton" -- Changed name for clarity
 loadFreecam.Text = "Load Freecam"
 loadFreecam.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
 loadFreecam.Position = UDim2.new(0, 10, 0, 10)
-loadFreecam.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadFreecam.BackgroundColor3 = Color3.fromRGB(11, 12, 12)
 loadFreecam.BorderColor3 = Color3.fromRGB(0, 0, 0)
 loadFreecam.BorderSizePixel = 5
 loadFreecam.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadFreecam.Font = Enum.Font.SourceSans
-loadFreecam.TextSize = 16
+loadFreecam.Font = Enum.Font.SourceSansBold
+loadFreecam.TextSize = 26
 loadFreecam.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 60) -- Centered Horizontally, 10px from top of frame area
 loadFreecam.Parent = draggableContainer
+
+local uiCorner2 = Instance.new("UICorner")
+uiCorner2.Parent = loadFreecam
+
+local uiStroke2 = Instance.new("UIStroke")
+uiStroke2.Parent = loadFreecam
+uiStroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+uiStroke2.Thickness = 4
+uiStroke2.Color = Color3.fromRGB(0, 0, 0)
 
 local loadTeleport = Instance.new("TextButton")
 loadTeleport.Name = "LoadTeleportButton" -- Changed name for clarity
 loadTeleport.Text = "Load Teleport"
 loadTeleport.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
 loadTeleport.Position = UDim2.new(0, 10, 0, 10)
-loadTeleport.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadTeleport.BackgroundColor3 = Color3.fromRGB(11, 12, 12)
 loadTeleport.BorderColor3 = Color3.fromRGB(0, 0, 0)
 loadTeleport.BorderSizePixel = 5
 loadTeleport.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadTeleport.Font = Enum.Font.SourceSans
-loadTeleport.TextSize = 16
+loadTeleport.Font = Enum.Font.SourceSansBold
+loadTeleport.TextSize = 26
 loadTeleport.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 110) -- Centered Horizontally, 10px from top of frame area
 loadTeleport.Parent = draggableContainer
+
+local uiCorner3 = Instance.new("UICorner")
+uiCorner3.Parent = loadTeleport
+
+local uiStroke3 = Instance.new("UIStroke")
+uiStroke3.Parent = loadTeleport
+uiStroke3.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+uiStroke3.Thickness = 4
+uiStroke3.Color = Color3.fromRGB(0, 0, 0)
 
 local loadESP = Instance.new("TextButton")
 loadESP.Name = "LoadESPButton" -- Changed name for clarity
 loadESP.Text = "Load ESP"
 loadESP.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
 loadESP.Position = UDim2.new(0, 10, 0, 10)
-loadESP.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadESP.BackgroundColor3 = Color3.fromRGB(11, 12, 12)
 loadESP.BorderColor3 = Color3.fromRGB(0, 0, 0)
 loadESP.BorderSizePixel = 5
 loadESP.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadESP.Font = Enum.Font.SourceSans
-loadESP.TextSize = 16
+loadESP.Font = Enum.Font.SourceSansBold
+loadESP.TextSize = 26
 loadESP.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 160) -- Centered Horizontally, 10px from top of frame area
 loadESP.Parent = draggableContainer
+
+local uiCorner4 = Instance.new("UICorner")
+uiCorner4.Parent = loadESP
+
+local uiStroke4 = Instance.new("UIStroke")
+uiStroke4.Parent = loadESP
+uiStroke4.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+uiStroke4.Thickness = 4
+uiStroke4.Color = Color3.fromRGB(0, 0, 0)
 
 local loadWaypoints = Instance.new("TextButton")
 loadWaypoints.Name = "LoadWaypointsButton" -- Changed name for clarity
 loadWaypoints.Text = "Load Waypoints"
 loadWaypoints.Size = UDim2.new(0, 280, 0, 40) -- Slightly smaller to fit inside frame with padding
 loadWaypoints.Position = UDim2.new(0, 10, 0, 10)
-loadWaypoints.BackgroundColor3 = Color3.fromRGB(24, 26, 26)
+loadWaypoints.BackgroundColor3 = Color3.fromRGB(11, 12, 12)
 loadWaypoints.BorderColor3 = Color3.fromRGB(0, 0, 0)
 loadWaypoints.BorderSizePixel = 5
 loadWaypoints.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadWaypoints.Font = Enum.Font.SourceSans
-loadWaypoints.TextSize = 16
+loadWaypoints.Font = Enum.Font.SourceSansBold
+loadWaypoints.TextSize = 26
 loadWaypoints.Position = UDim2.new(0, (300 - 280)/2, 0, 30 + 210) -- Centered Horizontally, 10px from top of frame area
 loadWaypoints.Parent = draggableContainer
+
+local uiCorner5 = Instance.new("UICorner")
+uiCorner5.Parent = loadWaypoints
+
+local uiStroke5 = Instance.new("UIStroke")
+uiStroke5.Parent = loadWaypoints
+uiStroke5.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+uiStroke5.Thickness = 4
+uiStroke5.Color = Color3.fromRGB(0, 0, 0)
 
 -- Configure TextLabel (drag handle) for input
 textLabel.Active = true
@@ -157,8 +257,8 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
+
 loadPlatforms.Activated:Connect(function()
-	loadPlatforms.Text = ("...")
 	local UserInputService = game:GetService("UserInputService")
 	local Players = game:GetService("Players")
 
@@ -171,14 +271,13 @@ loadPlatforms.Activated:Connect(function()
 
 		if humanoidRootPart then
 			local part = Instance.new("Part")
-			part.Name = "TempPart_E_Key_" .. math.random(1, 100000) -- Give it a descriptive name
+			part.Name = "Pltf"
 			part.Anchored = true
-			part.Size = Vector3.new(10, 1, 10)
+			part.Size = Vector3.new(4, 1, 4)
 			part.Color = Color3.new(1, 1, 1) -- White color
 			part.Parent = workspace
 			part.Transparency = 0.95
 
-			-- Position the part's center 2 units below the HumanoidRootPart's center
 			part.Position = humanoidRootPart.Position - Vector3.new(0, 4, 0)
 
 			task.wait(2) -- Wait for half a second
@@ -203,12 +302,9 @@ loadPlatforms.Activated:Connect(function()
 			createAndDestroyTemporaryPart()
 		end
 	end)
-	print("Platforms Activated! Just jump...")
 	loadPlatforms.Transparency = 1
+	uiStroke1.Transparency = 1
 end)
-
-
-
 
 loadFreecam.Activated:Connect(function()
 	loadFreecam.Text = ("...")
@@ -382,8 +478,8 @@ loadFreecam.Activated:Connect(function()
 			end
 		end)
 	end
-	print("Freecam Activated! Use W/A/S/D to move, E/Q for up and down, shift to go fast. May not anchor you, may break. Only works with 1st/3rd person")
 	loadFreecam.Transparency = 1
+	uiStroke2.Transparency = 1
 end)
 
 
@@ -472,8 +568,8 @@ loadTeleport.Activated:Connect(function()
 			isRightMouseDown = false
 		end
 	end)
-	print("(Mb2) or (RightClick) - hold and press (Mb3) or (MiddleClick) to teleport")
 	loadTeleport.Transparency = 1
+	uiStroke3.Transparency = 1
 end)
 
 loadESP.Activated:Connect(function()
@@ -581,8 +677,8 @@ loadESP.Activated:Connect(function()
 		end
 		updateDistanceText()
 	end)
-	print("When loaded, attempts to put highlight on all players. If it didn't work, damn they have a good anticheat.")
 	loadESP.Transparency = 1
+	uiStroke4.Transparency = 1
 end)
 
 loadWaypoints.Activated:Connect(function()
@@ -754,6 +850,45 @@ loadWaypoints.Activated:Connect(function()
 			keysDown[key] = false
 		end
 	end)
-	print("(;) as base key, (') for creation, (bkspc + 1-9) for deletion, (1-9) to teleport to waypoint")
 	loadWaypoints.Transparency = 1
+	uiStroke.Transparency = 1
 end)
+
+
+
+
+
+
+
+
+
+
+
+while true do
+	wait(0.1)
+	if infoOn == true then
+		loadPlatforms.Text = "Each time you jump, a platforms appears under you."
+		loadFreecam.Text = "Use W/A/S/D to move, E/Q for up and down, shift to go fast. May not anchor you."
+		loadTeleport.Text = "Each time you jump, a platforms appears under you."
+		loadESP.Text = "When loaded, attempts to put highlight on all players. Getting updated soon...."
+		loadWaypoints.Text = "(;) as base key, (') for creation, (bkspc + 1-9) for deletion, (1-9) to teleport to waypoint"
+
+		loadPlatforms.TextScaled = true
+		loadFreecam.TextScaled = true
+		loadTeleport.TextScaled = true
+		loadESP.TextScaled = true
+		loadWaypoints.TextScaled = true
+	else
+		loadPlatforms.Text = "Load Platforms"
+		loadFreecam.Text = "Load Freecam"
+		loadTeleport.Text = "Load Teleport"
+		loadESP.Text = "Load ESP"
+		loadWaypoints.Text = "Load Waypoints"
+
+		loadPlatforms.TextScaled = false
+		loadFreecam.TextScaled = false
+		loadTeleport.TextScaled = false
+		loadESP.TextScaled = false
+		loadWaypoints.TextScaled = false
+	end
+end
